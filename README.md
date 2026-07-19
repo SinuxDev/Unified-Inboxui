@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Unified Inbox — Frontend
 
-## Getting Started
+Next.js Phase 0 UI: BFF auth (httpOnly cookie), TanStack Query, org context, teams.
 
-First, run the development server:
+This folder is its **own git repository** (separate from backend).
+
+## Prerequisites
+
+- Node.js 20+
+- Nest API running at `http://localhost:3001` (see `../backend`)
+
+## Quick start
 
 ```bash
+cd frontend
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App: `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Auth model
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Browser talks only to Next (`/api/...`).
+- Route Handlers call Nest with `Authorization: Bearer …`.
+- Nest JWT access + refresh tokens are stored in httpOnly cookies (`inbox_session`, `inbox_refresh`).
+- TanStack Query loads org/teams via same-origin BFF proxies; 401 triggers a silent refresh.
 
-## Learn More
+## Main routes
 
-To learn more about Next.js, take a look at the following resources:
+| Path        | Description                  |
+| ----------- | ---------------------------- |
+| `/register` | Create user + organization   |
+| `/login`    | Sign in                      |
+| `/`         | Current organization context |
+| `/teams`    | List / create teams          |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tests
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm test
+```
 
-## Deploy on Vercel
+## Docs
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Feature docs live under [`docs/`](docs/).
