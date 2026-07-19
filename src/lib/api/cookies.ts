@@ -9,7 +9,9 @@ export function getRefreshCookieName(): string {
 }
 
 function baseCookieOptions() {
-  const secure = process.env.SESSION_COOKIE_SECURE === 'true';
+  const secure =
+    process.env.SESSION_COOKIE_SECURE === 'true' ||
+    process.env.NODE_ENV === 'production';
   return {
     httpOnly: true as const,
     secure,
