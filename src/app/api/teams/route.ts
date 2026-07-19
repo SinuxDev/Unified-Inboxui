@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { jsonError } from '@/lib/api/http';
 import { nestFetch } from '@/lib/api/nest';
+import { assertAllowedOrigin } from '@/lib/api/origin';
 import type { Team } from '@/lib/api/types';
 import { createTeamSchema } from '@/lib/validation/auth';
 
@@ -15,6 +16,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    assertAllowedOrigin(request);
     const body = createTeamSchema.parse(await request.json());
     const data = await nestFetch<Team>('/teams', {
       method: 'POST',

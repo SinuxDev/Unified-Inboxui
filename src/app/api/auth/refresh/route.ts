@@ -6,10 +6,12 @@ import {
 } from '@/lib/api/cookies';
 import { jsonError } from '@/lib/api/http';
 import { nestFetch } from '@/lib/api/nest';
+import { assertAllowedOrigin } from '@/lib/api/origin';
 import type { AuthSessionPayload, NestAuthResponse } from '@/lib/api/types';
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    assertAllowedOrigin(request);
     const refreshToken = await getRefreshToken();
     if (!refreshToken) {
       await clearAuthCookies();
