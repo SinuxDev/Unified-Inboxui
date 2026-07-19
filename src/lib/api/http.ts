@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { ApiError } from '@/lib/api/nest';
+import { OriginError } from '@/lib/api/origin';
 
 export function jsonError(error: unknown, fallbackStatus = 500) {
+  if (error instanceof OriginError) {
+    return NextResponse.json({ error: error.message }, { status: 403 });
+  }
   if (error instanceof ApiError) {
     return NextResponse.json(
       { error: error.message },
