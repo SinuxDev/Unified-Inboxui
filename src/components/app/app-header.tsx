@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { OrganizationMe } from '@/lib/api/types';
 import { clientFetchJson } from '@/lib/query/client-fetch';
 import { queryKeys } from '@/lib/query/keys';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { cn } from '@/lib/utils';
 
 const nav = [
@@ -36,7 +37,7 @@ export function AppHeader() {
   });
 
   return (
-    <header className="border-b border-border bg-background">
+    <header className="border-b border-border bg-card">
       <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-4 px-4">
         <div className="flex items-center gap-6">
           <Link href="/" className="font-semibold tracking-tight">
@@ -65,6 +66,7 @@ export function AppHeader() {
               {orgQuery.data.organizationName} · {orgQuery.data.role}
             </p>
           ) : null}
+          <ThemeToggle />
           <Button
             variant="outline"
             size="sm"
