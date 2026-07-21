@@ -1,30 +1,27 @@
-'use client';
+const DESKTOP_LINES = ['24%', '46%', '68%'] as const;
+const MOBILE_LINES = ['38%', '64%'] as const;
 
-import { motion, useReducedMotion } from 'motion/react';
-
+/** Thread lines on the form column only — stage panel has its own composition. */
 export function AuthBackground() {
-  const rm = useReducedMotion();
-
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden"
+      className="pointer-events-none absolute inset-0 overflow-hidden lg:right-0"
     >
-      {/* Dot grid texture */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,color-mix(in_srgb,var(--border)_55%,transparent)_1px,transparent_0)] bg-size-[28px_28px] opacity-50 dark:opacity-35" />
-
-      {/* Slow-drifting large muted shape — very subtle */}
-      {!rm && (
-        <motion.div
-          className="absolute left-[5%] top-[15%] size-[min(480px,55vw)] rounded-full bg-primary/[0.045] blur-3xl dark:bg-primary/[0.065]"
-          animate={{
-            x: [0, 18, 0],
-            y: [0, -14, 0],
-            scale: [1, 1.04, 1],
-          }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+      {DESKTOP_LINES.map((top) => (
+        <div
+          key={top}
+          className="absolute inset-x-0 hidden h-px bg-border/40 lg:block"
+          style={{ top }}
         />
-      )}
+      ))}
+      {MOBILE_LINES.map((top) => (
+        <div
+          key={`m-${top}`}
+          className="absolute inset-x-0 h-px bg-border/40 lg:hidden"
+          style={{ top }}
+        />
+      ))}
     </div>
   );
 }

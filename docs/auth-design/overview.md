@@ -1,7 +1,7 @@
 # Auth design system
 
 **Shipped:** 2026-07-21  
-**Latest update:** [2026-07-21 creative auth motion](./updates/2026-07-21-creative-auth-motion.md)
+**Latest update:** [2026-07-21 stage motion variants](./updates/2026-07-21-stage-motion-variants.md)
 
 ## Purpose
 
@@ -17,9 +17,9 @@ App-wide cool-grey visual foundation and a shared “Quiet Canvas” auth shell 
 
 **Out of scope**
 
-- Dark mode
+- Dark mode on auth/marketing brand surfaces
 - Logo/icon asset
-- Marketing pages
+- App chrome redesign inside `/app`
 
 ## Color tokens
 
@@ -36,9 +36,10 @@ Mapped to shadcn variables: `--background`, `--border`, `--card`, `--foreground`
 
 ## Auth shell layout
 
-- **Desktop:** Brand block top-left; form anchored bottom-left (`max-w-md`).
-- **Mobile:** Same structure; fewer decorative thread lines.
-- **Thread lines:** Full-width `#DDDDDD` at 8% opacity, `aria-hidden`.
+- **Desktop (`lg+`):** Two columns — sign-in form on the left (~42%); cool-grey `AuthStage` visual panel on the right (~58%).
+- **Mobile:** Form column only; stage hidden.
+- **Form:** Upper-middle in the form column (`max-w-[28rem]`); no left brand header.
+- **Thread lines:** Soft rules on the form column; stage uses its own inbox-lane composition.
 
 ## Files
 
@@ -47,7 +48,7 @@ Mapped to shadcn variables: `--background`, `--border`, `--card`, `--foreground`
 | `src/app/globals.css`                   | App-wide tokens              |
 | `src/app/(auth)/layout.tsx`             | Auth route layout            |
 | `src/components/auth/auth-shell.tsx`    | Full-bleed shell             |
-| `src/components/auth/auth-brand.tsx`    | Wordmark + tagline           |
+| `src/components/auth/auth-stage.tsx`    | Right inbox preview panel    |
 | `src/components/auth/login-form.tsx`    | Flat sign-in form            |
 | `src/components/auth/register-form.tsx` | Flat register form           |
 | `src/components/app/app-header.tsx`     | White header bar (`bg-card`) |

@@ -12,7 +12,7 @@ import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { cn } from '@/lib/utils';
 
 const nav = [
-  { href: '/', label: 'Home' },
+  { href: '/app', label: 'Home' },
   { href: '/teams', label: 'Teams' },
 ];
 
@@ -31,7 +31,7 @@ export function AppHeader() {
       clientFetchJson<null>('/api/auth/logout', { method: 'POST' }),
     onSuccess: async () => {
       await queryClient.clear();
-      router.replace('/login');
+      router.replace('/');
       router.refresh();
     },
   });
@@ -40,7 +40,7 @@ export function AppHeader() {
     <header className="border-b border-border bg-card">
       <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-4 px-4">
         <div className="flex items-center gap-6">
-          <Link href="/" className="font-semibold tracking-tight">
+          <Link href="/app" className="font-semibold tracking-tight">
             Unified Inbox
           </Link>
           <nav className="flex items-center gap-1">
@@ -50,7 +50,9 @@ export function AppHeader() {
                 href={item.href}
                 className={cn(
                   'rounded-md px-2.5 py-1.5 text-sm text-muted-foreground hover:text-foreground',
-                  pathname === item.href && 'bg-muted text-foreground',
+                  (pathname === item.href ||
+                    pathname.startsWith(`${item.href}/`)) &&
+                    'bg-muted text-foreground',
                 )}
               >
                 {item.label}

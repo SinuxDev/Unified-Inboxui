@@ -49,38 +49,635 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #020617;
+  --background: #eeeeee;
+  --foreground: #1c1f26;
   --card: #ffffff;
-  --card-foreground: #020617;
+  --card-foreground: #1c1f26;
   --popover: #ffffff;
-  --popover-foreground: #020617;
-  --primary: #1d4ed8;
+  --popover-foreground: #1c1f26;
+  --primary: #1c1f26;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #334155;
-  --muted: #f8fafc;
-  --muted-foreground: #475569;
-  --accent: #eff6ff;
-  --accent-foreground: #1e40af;
+  --secondary: #dddddd;
+  --secondary-foreground: #1c1f26;
+  --muted: #dddddd;
+  --muted-foreground: #5c6573;
+  --accent: #dddddd;
+  --accent-foreground: #1c1f26;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #3b82f6;
-  --chart-1: #2563eb;
-  --chart-2: #64748b;
-  --chart-3: #0f172a;
-  --chart-4: #94a3b8;
-  --chart-5: #f1f5f9;
+  --border: #dddddd;
+  --input: #dddddd;
+  --ring: #9ca3af;
+  --chart-1: #dddddd;
+  --chart-2: #5c6573;
+  --chart-3: #1c1f26;
+  --chart-4: #9ca3af;
+  --chart-5: #eeeeee;
   --radius: 0.625rem;
   --sidebar: #ffffff;
-  --sidebar-foreground: #0f172a;
-  --sidebar-primary: #2563eb;
+  --sidebar-foreground: #1c1f26;
+  --sidebar-primary: #1c1f26;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f8fafc;
-  --sidebar-accent-foreground: #1e40af;
-  --sidebar-border: #e2e8f0;
-  --sidebar-ring: #3b82f6;
+  --sidebar-accent: #eeeeee;
+  --sidebar-accent-foreground: #1c1f26;
+  --sidebar-border: #dddddd;
+  --sidebar-ring: #9ca3af;
+}
+
+/* Brand surfaces (auth + marketing): always light cool-grey */
+.brand-canvas,
+.auth-canvas {
+  --background: #eeeeee;
+  --foreground: #1c1f26;
+  --card: #ffffff;
+  --card-foreground: #1c1f26;
+  --popover: #ffffff;
+  --popover-foreground: #1c1f26;
+  --primary: #1c1f26;
+  --primary-foreground: #ffffff;
+  --secondary: #dddddd;
+  --secondary-foreground: #1c1f26;
+  --muted: #dddddd;
+  --muted-foreground: #5c6573;
+  --accent: #dddddd;
+  --accent-foreground: #1c1f26;
+  --border: #dddddd;
+  --input: #dddddd;
+  --ring: #9ca3af;
+  color-scheme: light;
+}
+
+/* Brand always renders light — override dark: utilities when html has .dark */
+.brand-canvas [data-slot='input'],
+.auth-canvas [data-slot='input'] {
+  background-color: var(--card);
+  border-color: var(--border);
+}
+
+.brand-canvas [data-slot='field-label'],
+.brand-canvas [data-slot='label'],
+.auth-canvas [data-slot='field-label'],
+.auth-canvas [data-slot='label'] {
+  color: var(--foreground);
+}
+
+/* Auth entrance animations — CSS so they always run after mount (data-ready) */
+@keyframes auth-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes auth-fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes auth-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(56px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes auth-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes auth-scale-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes auth-msg-in {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes auth-msg-out {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes auth-dot-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+.auth-canvas [data-auth-anim] {
+  /* Only hide before ready — never leave the right panel stuck invisible */
+  opacity: 0;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim] {
+  /* Hard fallback: if a keyframe fails, content is still visible */
+  opacity: 1;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='brand'] {
+  animation: auth-fade-down 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='form'] {
+  animation: auth-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='stage-caption'] {
+  animation: auth-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='stage-frame'] {
+  animation: auth-scale-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='thread'] {
+  animation: auth-slide-in-left 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='msg-in'] {
+  animation: auth-msg-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='msg-out'] {
+  animation: auth-msg-out 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='composer'] {
+  animation: auth-fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
+}
+
+.auth-canvas[data-ready='true'] [data-auth-anim='dot'] {
+  opacity: 1;
+  animation: auth-dot-pulse 2s ease-in-out infinite;
+}
+
+/* Live chat demo — bubble enter + send feel */
+@keyframes auth-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) translateX(-8px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+  }
+}
+
+@keyframes auth-bubble-out {
+  0% {
+    opacity: 0;
+    transform: translateY(28px) translateX(12px) scale(0.88);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-3px) translateX(0) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+  }
+}
+
+@keyframes auth-send-pop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.86);
+  }
+  70% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes auth-typing-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+@keyframes auth-caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.auth-chat-bubble-out {
+  transform-origin: bottom right;
+  animation: auth-bubble-out 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-chat-bubble-in {
+  transform-origin: bottom left;
+  animation: auth-bubble-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-send-btn-pulse {
+  animation: auth-send-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Landing hero preview — cinematic motion (distinct from auth panel) */
+@keyframes hero-bubble-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateX(-28px) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0) translateY(0);
+  }
+}
+
+@keyframes hero-bubble-out {
+  from {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateX(36px) translateY(8px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0) translateY(0) scale(1);
+  }
+}
+
+@keyframes hero-send-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgb(28 31 38 / 0%);
+    transform: scale(1);
+  }
+  40% {
+    box-shadow: 0 0 0 6px rgb(28 31 38 / 0.12);
+    transform: scale(1.06);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(28 31 38 / 0%);
+    transform: scale(1);
+  }
+}
+
+@keyframes hero-frame-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 1px 2px rgb(28 31 38 / 0.04),
+      0 12px 28px rgb(28 31 38 / 0.06);
+  }
+  50% {
+    box-shadow:
+      0 1px 2px rgb(28 31 38 / 0.05),
+      0 18px 40px rgb(28 31 38 / 0.1);
+  }
+}
+
+@keyframes hero-thread-sweep {
+  from {
+    background-color: transparent;
+    box-shadow: inset 3px 0 0 transparent;
+  }
+  to {
+    background-color: color-mix(in srgb, #ecfeff 80%, white);
+    box-shadow: inset 3px 0 0 #0891b2;
+  }
+}
+
+@keyframes hero-pane-reveal {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+[data-stage-motion='hero'] .auth-chat-bubble-in {
+  transform-origin: center left;
+  animation: hero-bubble-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+[data-stage-motion='hero'] .auth-chat-bubble-out {
+  transform-origin: center right;
+  animation: hero-bubble-out 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+[data-stage-motion='hero'] .auth-send-btn-pulse {
+  animation: hero-send-glow 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-stage-motion='hero'] .hero-stage-frame {
+  animation: hero-frame-breathe 5.5s ease-in-out infinite;
+}
+
+[data-stage-motion='hero'] .hero-thread-active {
+  animation: hero-thread-sweep 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[data-stage-motion='hero'] .hero-pane-reveal {
+  animation: hero-pane-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-chat-bubble-in,
+  .auth-chat-bubble-out,
+  .auth-send-btn-pulse,
+  [data-stage-motion='hero'] .auth-chat-bubble-in,
+  [data-stage-motion='hero'] .auth-chat-bubble-out,
+  [data-stage-motion='hero'] .auth-send-btn-pulse,
+  [data-stage-motion='hero'] .hero-stage-frame,
+  [data-stage-motion='hero'] .hero-thread-active,
+  [data-stage-motion='hero'] .hero-pane-reveal {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.auth-typing-dot:nth-child(1) {
+  animation: auth-typing-bounce 1s ease-in-out infinite;
+}
+.auth-typing-dot:nth-child(2) {
+  animation: auth-typing-bounce 1s ease-in-out 0.15s infinite;
+}
+.auth-typing-dot:nth-child(3) {
+  animation: auth-typing-bounce 1s ease-in-out 0.3s infinite;
+}
+
+.auth-caret {
+  display: inline-block;
+  width: 1px;
+  height: 0.85rem;
+  margin-left: 2px;
+  background: color-mix(in srgb, var(--foreground) 55%, transparent);
+  animation: auth-caret-blink 1s step-end infinite;
+}
+
+/* Marketing hero — converging channel threads (3-beat story) */
+@keyframes ct-flow {
+  to {
+    stroke-dashoffset: -42;
+  }
+}
+
+@keyframes ct-node-breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes ct-ring {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes ct-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ct-team-in {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.converging-threads .ct-caption {
+  animation: ct-fade-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.converging-threads .ct-stream {
+  stroke-dasharray: 7 11;
+  animation: ct-flow 2.6s linear infinite;
+}
+
+.converging-threads .ct-stream-email {
+  animation-delay: 0s;
+}
+
+.converging-threads .ct-stream-telegram {
+  animation-delay: -0.45s;
+}
+
+.converging-threads .ct-stream-messenger {
+  animation-delay: -0.9s;
+}
+
+.converging-threads .ct-stream-teams {
+  animation-delay: -1.35s;
+}
+
+.converging-threads .ct-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ct-node-breathe 2.8s ease-in-out infinite;
+}
+
+.converging-threads .ct-node-2 {
+  animation-delay: 0.35s;
+}
+
+.converging-threads .ct-node-3 {
+  animation-delay: 0.7s;
+}
+
+.converging-threads .ct-node-4 {
+  animation-delay: 1.05s;
+}
+
+.converging-threads .ct-merge-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ct-ring 2.8s ease-in-out infinite;
+}
+
+.converging-threads .ct-unify,
+.converging-threads .ct-team {
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+
+.converging-threads .ct-spine {
+  opacity: 0.25;
+  transition: opacity 0.45s ease;
+}
+
+/* Beat 1 — Connect: channels flowing in */
+.converging-threads[data-beat='connect'] .ct-channels {
+  opacity: 1;
+}
+
+.converging-threads[data-beat='connect'] .ct-unify {
+  opacity: 0.35;
+}
+
+.converging-threads[data-beat='connect'] .ct-spine {
+  opacity: 0.2;
+}
+
+.converging-threads[data-beat='connect'] .ct-pulse,
+.converging-threads[data-beat='connect'] .ct-pulse-soft,
+.converging-threads[data-beat='connect'] .ct-inbox-label {
+  opacity: 0;
+}
+
+/* Beat 2 — Unify: merge into one inbox */
+.converging-threads[data-beat='unify'] .ct-unify {
+  opacity: 1;
+}
+
+.converging-threads[data-beat='unify'] .ct-spine {
+  opacity: 1;
+}
+
+.converging-threads[data-beat='unify'] .ct-stream {
+  opacity: 0.55;
+}
+
+/* Beat 3 — Reply together: team on the thread */
+.converging-threads[data-beat='reply'] .ct-unify {
+  opacity: 1;
+}
+
+.converging-threads[data-beat='reply'] .ct-spine {
+  opacity: 1;
+}
+
+.converging-threads[data-beat='reply'] .ct-stream {
+  opacity: 0.35;
+}
+
+.converging-threads[data-beat='reply'] .ct-team {
+  opacity: 1;
+  animation: ct-team-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.converging-threads[data-beat='reply'] .ct-inbox-label,
+.converging-threads[data-beat='reply'] .ct-pulse,
+.converging-threads[data-beat='reply'] .ct-pulse-soft {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .converging-threads .ct-stream,
+  .converging-threads .ct-node,
+  .converging-threads .ct-merge-ring,
+  .converging-threads .ct-caption,
+  .converging-threads .ct-team {
+    animation: none;
+  }
+
+  .converging-threads .ct-stream {
+    stroke-dasharray: none;
+  }
+
+  .converging-threads .ct-pulse,
+  .converging-threads .ct-pulse-soft {
+    display: none;
+  }
+
+  .converging-threads .ct-unify,
+  .converging-threads .ct-team {
+    opacity: 1;
+  }
+
+  .converging-threads .ct-spine {
+    opacity: 1;
+  }
 }
 
 .dark {

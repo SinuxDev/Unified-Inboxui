@@ -10,21 +10,29 @@ export function middleware(request: NextRequest) {
   const signedIn = Boolean(access || refresh);
   const { pathname } = request.nextUrl;
   const isAuthPage = pathname === '/login' || pathname === '/register';
-  const isAppPage = pathname === '/' || pathname.startsWith('/teams');
+  const isMarketingHome = pathname === '/';
+  const isProtectedApp =
+    pathname === '/app' ||
+    pathname.startsWith('/app/') ||
+    pathname.startsWith('/teams');
 
-  if (!signedIn && isAppPage) {
+  if (!signedIn && isProtectedApp) {
     const login = new URL('/login', request.url);
     login.searchParams.set('next', pathname);
     return NextResponse.redirect(login);
   }
 
+  if (signedIn && isMarketingHome) {
+    return NextResponse.redirect(new URL('/app', request.url));
+  }
+
   if (signedIn && isAuthPage) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/app', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/', '/login', '/register', '/teams/:path*'],
+  matcher: ['/', '/app', '/app/:path*', '/login', '/register', '/teams/:path*'],
 };

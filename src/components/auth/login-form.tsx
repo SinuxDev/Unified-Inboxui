@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { ClientApiError, clientFetchJson } from '@/lib/query/client-fetch';
 import type { AuthSessionPayload } from '@/lib/api/types';
 import { loginSchema } from '@/lib/validation/auth';
-import { AuthStagger, AuthStaggerItem } from '@/components/auth/auth-stagger';
 import { AuthSubmitButton } from '@/components/auth/auth-submit-button';
 
 export function LoginForm() {
@@ -33,7 +32,7 @@ export function LoginForm() {
       }),
     onSuccess: async () => {
       await queryClient.clear();
-      router.replace('/');
+      router.replace('/app');
       router.refresh();
     },
   });
@@ -62,56 +61,58 @@ export function LoginForm() {
         : null;
 
   return (
-    <AuthStagger className="flex w-full flex-col gap-5">
-      <AuthStaggerItem className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+    <div className="flex w-full flex-col gap-5">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
           Sign in
         </h1>
-        <p className="text-sm text-secondary-foreground">
-          Access your Unified Inbox organization.
+        <p className="text-sm text-muted-foreground">
+          Access your organization.
         </p>
-      </AuthStaggerItem>
+      </div>
       <form onSubmit={onSubmit} className="flex flex-col gap-5">
-        <AuthStaggerItem>
-          <FieldGroup className="gap-4">
-            {serverError ? (
-              <Alert variant="destructive">
-                <AlertDescription>{serverError}</AlertDescription>
-              </Alert>
-            ) : null}
-            <Field data-invalid={!!fieldErrors.email || undefined}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                className="h-10"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                aria-invalid={!!fieldErrors.email || undefined}
-              />
-              <FieldError>{fieldErrors.email}</FieldError>
-            </Field>
-            <Field data-invalid={!!fieldErrors.password || undefined}>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                className="h-10"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-invalid={!!fieldErrors.password || undefined}
-              />
-              <FieldError>{fieldErrors.password}</FieldError>
-            </Field>
-          </FieldGroup>
-        </AuthStaggerItem>
-        <AuthStaggerItem className="flex flex-col gap-3 pt-0.5">
+        <FieldGroup className="gap-4">
+          {serverError ? (
+            <Alert variant="destructive">
+              <AlertDescription>{serverError}</AlertDescription>
+            </Alert>
+          ) : null}
+          <Field data-invalid={!!fieldErrors.email || undefined}>
+            <FieldLabel htmlFor="email" className="text-foreground">
+              Email
+            </FieldLabel>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              className="h-10 border-border bg-card shadow-sm dark:border-border dark:bg-card"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              aria-invalid={!!fieldErrors.email || undefined}
+            />
+            <FieldError>{fieldErrors.email}</FieldError>
+          </Field>
+          <Field data-invalid={!!fieldErrors.password || undefined}>
+            <FieldLabel htmlFor="password" className="text-foreground">
+              Password
+            </FieldLabel>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              className="h-10 border-border bg-card shadow-sm dark:border-border dark:bg-card"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              aria-invalid={!!fieldErrors.password || undefined}
+            />
+            <FieldError>{fieldErrors.password}</FieldError>
+          </Field>
+        </FieldGroup>
+        <div className="flex flex-col gap-3 pt-0.5">
           <AuthSubmitButton disabled={mutation.isPending}>
             {mutation.isPending ? 'Signing in…' : 'Sign in'}
           </AuthSubmitButton>
-          <p className="text-center text-sm text-secondary-foreground">
+          <p className="text-sm text-muted-foreground">
             No account?{' '}
             <Link
               href="/register"
@@ -120,8 +121,8 @@ export function LoginForm() {
               Create one
             </Link>
           </p>
-        </AuthStaggerItem>
+        </div>
       </form>
-    </AuthStagger>
+    </div>
   );
 }

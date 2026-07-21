@@ -1,6 +1,3 @@
-'use client';
-
-import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -10,9 +7,7 @@ export function AuthSubmitButton({
   children,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const rm = useReducedMotion();
-
-  const button = (
+  return (
     <Button
       type="submit"
       size="lg"
@@ -28,17 +23,5 @@ export function AuthSubmitButton({
     >
       {children}
     </Button>
-  );
-
-  if (rm) return button;
-
-  return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.97, transition: { duration: 0.08 } }}
-      transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-    >
-      {button}
-    </motion.div>
   );
 }
