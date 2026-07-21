@@ -5,15 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import {
   Field,
   FieldError,
@@ -24,6 +15,8 @@ import { Input } from '@/components/ui/input';
 import type { AuthSessionPayload } from '@/lib/api/types';
 import { ClientApiError, clientFetchJson } from '@/lib/query/client-fetch';
 import { registerSchema } from '@/lib/validation/auth';
+import { AuthStagger, AuthStaggerItem } from '@/components/auth/auth-stagger';
+import { AuthSubmitButton } from '@/components/auth/auth-submit-button';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -81,16 +74,18 @@ export function RegisterForm() {
         : null;
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Create account</CardTitle>
-        <CardDescription>
+    <AuthStagger className="flex w-full flex-col gap-5">
+      <AuthStaggerItem className="flex flex-col gap-1">
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+          Create account
+        </h1>
+        <p className="text-sm text-secondary-foreground">
           Register your organization on Unified Inbox.
-        </CardDescription>
-      </CardHeader>
-      <form onSubmit={onSubmit}>
-        <CardContent>
-          <FieldGroup>
+        </p>
+      </AuthStaggerItem>
+      <form onSubmit={onSubmit} className="flex flex-col gap-5">
+        <AuthStaggerItem>
+          <FieldGroup className="gap-4">
             {serverError ? (
               <Alert variant="destructive">
                 <AlertDescription>{serverError}</AlertDescription>
@@ -100,6 +95,7 @@ export function RegisterForm() {
               <FieldLabel htmlFor="organizationName">Organization</FieldLabel>
               <Input
                 id="organizationName"
+                className="h-10"
                 value={organizationName}
                 onChange={(e) => setOrganizationName(e.target.value)}
                 aria-invalid={!!fieldErrors.organizationName || undefined}
@@ -112,6 +108,7 @@ export function RegisterForm() {
                 id="email"
                 type="email"
                 autoComplete="email"
+                className="h-10"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={!!fieldErrors.email || undefined}
@@ -124,6 +121,7 @@ export function RegisterForm() {
               </FieldLabel>
               <Input
                 id="displayName"
+                className="h-10"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
               />
@@ -135,6 +133,7 @@ export function RegisterForm() {
                 id="password"
                 type="password"
                 autoComplete="new-password"
+                className="h-10"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 aria-invalid={!!fieldErrors.password || undefined}
@@ -142,23 +141,22 @@ export function RegisterForm() {
               <FieldError>{fieldErrors.password}</FieldError>
             </Field>
           </FieldGroup>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-3">
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={mutation.isPending}
-          >
+        </AuthStaggerItem>
+        <AuthStaggerItem className="flex flex-col gap-3 pt-0.5">
+          <AuthSubmitButton disabled={mutation.isPending}>
             {mutation.isPending ? 'Creating…' : 'Create account'}
-          </Button>
-          <p className="text-sm text-muted-foreground">
-            Already registered?{' '}
-            <Link href="/login" className="underline underline-offset-4">
+          </AuthSubmitButton>
+          <p className="text-center text-sm text-secondary-foreground">
+            Already have an account?{' '}
+            <Link
+              href="/login"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
               Sign in
             </Link>
           </p>
-        </CardFooter>
+        </AuthStaggerItem>
       </form>
-    </Card>
+    </AuthStagger>
   );
 }
