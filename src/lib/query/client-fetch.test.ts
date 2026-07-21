@@ -14,17 +14,30 @@ describe('clientFetchJson refresh', () => {
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ error: 'Unauthorized' }), {
-          status: 401,
-        }),
+        new Response(
+          JSON.stringify({
+            success: false,
+            message: 'Unauthorized',
+            data: null,
+          }),
+          { status: 401 },
+        ),
       )
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ ok: true }), { status: 200 }),
+        new Response(
+          JSON.stringify({ success: true, message: 'OK', data: null }),
+          { status: 200 },
+        ),
       )
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ organizationName: 'Acme' }), {
-          status: 200,
-        }),
+        new Response(
+          JSON.stringify({
+            success: true,
+            message: 'OK',
+            data: { organizationName: 'Acme' },
+          }),
+          { status: 200 },
+        ),
       );
 
     vi.stubGlobal('fetch', fetchMock);
@@ -42,12 +55,24 @@ describe('clientFetchJson refresh', () => {
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ error: 'Unauthorized' }), {
-          status: 401,
-        }),
+        new Response(
+          JSON.stringify({
+            success: false,
+            message: 'Unauthorized',
+            data: null,
+          }),
+          { status: 401 },
+        ),
       )
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ error: 'No refresh' }), { status: 401 }),
+        new Response(
+          JSON.stringify({
+            success: false,
+            message: 'No refresh token',
+            data: null,
+          }),
+          { status: 401 },
+        ),
       );
 
     vi.stubGlobal('fetch', fetchMock);

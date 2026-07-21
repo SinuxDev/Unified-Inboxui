@@ -27,7 +27,7 @@ export function AppHeader() {
 
   const logout = useMutation({
     mutationFn: () =>
-      clientFetchJson<{ ok: boolean }>('/api/auth/logout', { method: 'POST' }),
+      clientFetchJson<null>('/api/auth/logout', { method: 'POST' }),
     onSuccess: async () => {
       await queryClient.clear();
       router.replace('/login');

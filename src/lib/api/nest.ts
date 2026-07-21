@@ -1,3 +1,4 @@
+import { isApiSuccessResponse, messageFromBody } from './api-response';
 import {
   clearAuthCookies,
   getAccessToken,
@@ -23,21 +24,6 @@ function getApiUrl(): string {
     throw new Error('API_URL is not configured');
   }
   return url.replace(/\/$/, '');
-}
-
-function errorMessage(body: unknown, fallback: string): string {
-  if (
-    typeof body === 'object' &&
-    body !== null &&
-    'message' in body &&
-    (typeof (body as { message: unknown }).message === 'string' ||
-      Array.isArray((body as { message: unknown }).message))
-  ) {
-    return Array.isArray((body as { message: unknown }).message)
-      ? (body as { message: string[] }).message.join(', ')
-      : (body as { message: string }).message;
-  }
-  return fallback;
 }
 
 async function rawNestFetch(
@@ -79,9 +65,14 @@ async function tryRefreshAccessToken(): Promise<string | null> {
     return null;
   }
 
-  const data = (await res.json()) as NestAuthResponse;
-  await setAuthCookies(data.accessToken, data.refreshToken);
-  return data.accessToken;
+  const body: unknown = await res.json();
+  if (!isApiSuccessResponse<NestAuthResponse>(body)) {
+    await clearAuthCookies();
+    return null;
+  }
+
+  await setAuthCookies(body.data.accessToken, body.data.refreshToken);
+  return body.data.accessToken;
 }
 
 export async function nestFetch<T>(
@@ -109,7 +100,7 @@ export async function nestFetch<T>(
       body = await res.text().catch(() => undefined);
     }
     throw new ApiError(
-      errorMessage(body, res.statusText || 'Request failed'),
+      messageFromBody(body, res.statusText || 'Request failed'),
       res.status,
       body,
     );
@@ -119,5 +110,10 @@ export async function nestFetch<T>(
     return undefined as T;
   }
 
-  return (await res.json()) as T;
+  const body: unknown = await res.json();
+  if (isApiSuccessResponse<T>(body)) {
+    return body.data;
+  }
+
+  return body as T;
 }

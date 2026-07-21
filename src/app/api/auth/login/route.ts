@@ -1,6 +1,5 @@
-import { NextResponse } from 'next/server';
 import { setAuthCookies } from '@/lib/api/cookies';
-import { jsonError } from '@/lib/api/http';
+import { jsonError, jsonSuccess } from '@/lib/api/http';
 import { nestFetch } from '@/lib/api/nest';
 import { assertAllowedOrigin } from '@/lib/api/origin';
 import type { AuthSessionPayload, NestAuthResponse } from '@/lib/api/types';
@@ -22,7 +21,7 @@ export async function POST(request: Request) {
       user: result.user,
       organization: result.organization,
     };
-    return NextResponse.json(payload);
+    return jsonSuccess(payload);
   } catch (error) {
     return jsonError(error, 400);
   }

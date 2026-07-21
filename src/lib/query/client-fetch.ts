@@ -1,3 +1,5 @@
+import { isApiSuccessResponse, messageFromBody } from '@/lib/api/api-response';
+
 export class ClientApiError extends Error {
   constructor(
     message: string,
@@ -58,19 +60,26 @@ export async function clientFetchJson<T>(
   }
 
   if (!res.ok) {
-    let message = res.statusText || 'Request failed';
+    let body: unknown;
     try {
-      const body = (await res.json()) as { error?: string; message?: string };
-      message = body.error ?? body.message ?? message;
+      body = await res.json();
     } catch {
-      // ignore
+      body = undefined;
     }
-    throw new ClientApiError(message, res.status);
+    throw new ClientApiError(
+      messageFromBody(body, res.statusText || 'Request failed'),
+      res.status,
+    );
   }
 
   if (res.status === 204) {
     return undefined as T;
   }
 
-  return (await res.json()) as T;
+  const body: unknown = await res.json();
+  if (isApiSuccessResponse<T>(body)) {
+    return body.data;
+  }
+
+  return body as T;
 }
