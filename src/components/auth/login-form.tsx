@@ -5,15 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import {
   Field,
   FieldError,
@@ -24,6 +15,8 @@ import { Input } from '@/components/ui/input';
 import { ClientApiError, clientFetchJson } from '@/lib/query/client-fetch';
 import type { AuthSessionPayload } from '@/lib/api/types';
 import { loginSchema } from '@/lib/validation/auth';
+import { AuthStagger, AuthStaggerItem } from '@/components/auth/auth-stagger';
+import { AuthSubmitButton } from '@/components/auth/auth-submit-button';
 
 export function LoginForm() {
   const router = useRouter();
@@ -69,16 +62,18 @@ export function LoginForm() {
         : null;
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Sign in</CardTitle>
-        <CardDescription>
+    <AuthStagger className="flex w-full flex-col gap-5">
+      <AuthStaggerItem className="flex flex-col gap-1">
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+          Sign in
+        </h1>
+        <p className="text-sm text-secondary-foreground">
           Access your Unified Inbox organization.
-        </CardDescription>
-      </CardHeader>
-      <form onSubmit={onSubmit}>
-        <CardContent>
-          <FieldGroup>
+        </p>
+      </AuthStaggerItem>
+      <form onSubmit={onSubmit} className="flex flex-col gap-5">
+        <AuthStaggerItem>
+          <FieldGroup className="gap-4">
             {serverError ? (
               <Alert variant="destructive">
                 <AlertDescription>{serverError}</AlertDescription>
@@ -90,6 +85,7 @@ export function LoginForm() {
                 id="email"
                 type="email"
                 autoComplete="email"
+                className="h-10"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={!!fieldErrors.email || undefined}
@@ -102,6 +98,7 @@ export function LoginForm() {
                 id="password"
                 type="password"
                 autoComplete="current-password"
+                className="h-10"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 aria-invalid={!!fieldErrors.password || undefined}
@@ -109,23 +106,22 @@ export function LoginForm() {
               <FieldError>{fieldErrors.password}</FieldError>
             </Field>
           </FieldGroup>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-3">
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={mutation.isPending}
-          >
+        </AuthStaggerItem>
+        <AuthStaggerItem className="flex flex-col gap-3 pt-0.5">
+          <AuthSubmitButton disabled={mutation.isPending}>
             {mutation.isPending ? 'Signing in…' : 'Sign in'}
-          </Button>
-          <p className="text-sm text-muted-foreground">
+          </AuthSubmitButton>
+          <p className="text-center text-sm text-secondary-foreground">
             No account?{' '}
-            <Link href="/register" className="underline underline-offset-4">
+            <Link
+              href="/register"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
               Create one
             </Link>
           </p>
-        </CardFooter>
+        </AuthStaggerItem>
       </form>
-    </Card>
+    </AuthStagger>
   );
 }
