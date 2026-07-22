@@ -1,7 +1,7 @@
 # Marketing landing
 
 **Shipped:** 2026-07-21  
-**Latest update:** [2026-07-21 three-beat hero story](./updates/2026-07-21-three-beat-hero-story.md)
+**Latest update:** [2026-07-21 workspace story hero](./updates/2026-07-21-workspace-story-hero.md)
 
 ## Purpose
 
@@ -13,8 +13,8 @@ Public product story at `/` for logged-out visitors so they understand Unified I
 
 - Landing route at `/` (marketing route group)
 - Quiet Canvas brand lock (shared with auth via `.brand-canvas`)
-- Hero with converging-threads motion graphic, channels, how-it-works, outcomes, footer CTAs
-- Live inbox demo remains on auth only
+- Hero with **workspace storyboard** (`HeroWorkspaceStory`) — three-beat Connect / Unify / Reply together, no chat UI
+- Auth pages keep the live `AuthStage` demo panel
 - Middleware: public `/`; signed-in `/` redirects to `/app`
 
 **Out of scope**
