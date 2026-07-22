@@ -1,21 +1,16 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { ConvergingThreads } from '@/components/marketing/converging-threads';
+import { ChannelStreamSection } from '@/components/marketing/channel-stream-section';
+import { HeroCopy } from '@/components/marketing/hero-copy';
+import { HeroWorkspaceStory } from '@/components/marketing/hero-workspace-story';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Unified Inbox | Future Wave',
+  title: 'Unified Inbox',
   description:
     'One workspace for every customer conversation. Email, Telegram, Messenger, and Teams in one calm inbox.',
 };
-
-const CHANNELS = [
-  { name: 'Email', tone: 'bg-sky-100 text-sky-800' },
-  { name: 'Telegram', tone: 'bg-cyan-100 text-cyan-800' },
-  { name: 'Messenger', tone: 'bg-indigo-100 text-indigo-800' },
-  { name: 'Teams', tone: 'bg-violet-100 text-violet-800' },
-] as const;
 
 const STEPS = [
   {
@@ -77,7 +72,11 @@ export default function MarketingLandingPage() {
     <div className="relative min-h-svh overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.85),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(221,221,221,0.55),transparent_50%)]"
+        className="marketing-hero-grid pointer-events-none absolute inset-0 opacity-70"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.92),transparent_58%),radial-gradient(ellipse_at_20%_80%,rgba(221,221,221,0.45),transparent_52%),radial-gradient(ellipse_at_85%_15%,rgba(14,165,233,0.06),transparent_40%)]"
       />
 
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6 sm:px-8">
@@ -104,66 +103,37 @@ export default function MarketingLandingPage() {
       </header>
 
       <main className="relative z-10">
-        <section className="mx-auto grid w-full max-w-6xl gap-12 px-6 pb-16 pt-8 sm:px-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-14 lg:pb-24 lg:pt-12">
-          <div>
-            <p className="text-[0.7rem] font-medium tracking-[0.16em] text-muted-foreground uppercase">
-              Future Wave
-            </p>
-            <h1 className="mt-4 max-w-xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl sm:leading-[1.08]">
-              One workspace for every customer conversation
-            </h1>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Bring email, Telegram, Messenger, and Teams into one calm inbox so
-              your team never misses a message and always has the full story.
-            </p>
-            <CtaGroup className="mt-8 flex flex-wrap gap-3" />
+        <section
+          data-marketing-hero
+          className="marketing-hero mx-auto grid w-full max-w-6xl gap-12 px-6 pb-16 pt-8 sm:px-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-center lg:gap-16 lg:pb-24 lg:pt-14"
+        >
+          <div className="relative z-10">
+            <HeroCopy />
+            <CtaGroup className="marketing-hero-reveal marketing-hero-reveal-delay-3 mt-8 flex flex-wrap gap-3" />
           </div>
 
-          <div className="relative">
-            <div
-              aria-hidden
-              className="absolute -inset-4 rounded-2xl bg-white/50 blur-2xl sm:-inset-6"
-            />
-            <div className="relative">
-              <ConvergingThreads />
-            </div>
+          <div className="relative z-10 lg:pl-2">
+            <HeroWorkspaceStory />
           </div>
         </section>
 
-        <section className="border-y border-border bg-card/80">
-          <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-14 sm:px-8">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-                Every channel. One stream.
-              </h2>
-              <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
-                Stop switching apps. Customer messages meet your team in a
-                single shared workspace.
-              </p>
-            </div>
-            <ul className="flex flex-wrap gap-3">
-              {CHANNELS.map((channel) => (
-                <li
-                  key={channel.name}
-                  className={`rounded-full px-4 py-2 text-sm font-medium ${channel.tone}`}
-                >
-                  {channel.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+        <ChannelStreamSection />
 
         <section className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8 sm:py-20">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-            How it works
-          </h2>
-          <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
-            Three steps from scattered chats to one calm thread.
-          </p>
+          <div className="marketing-inview">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              How it works
+            </h2>
+            <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
+              Three steps from scattered chats to one calm thread.
+            </p>
+          </div>
           <ol className="mt-10 grid gap-8 sm:grid-cols-3">
             {STEPS.map((item) => (
-              <li key={item.step} className="flex flex-col gap-3">
+              <li
+                key={item.step}
+                className="marketing-inview-item flex flex-col gap-3"
+              >
                 <span className="text-xs font-medium tracking-[0.14em] text-muted-foreground">
                   {item.step}
                 </span>
@@ -178,27 +148,25 @@ export default function MarketingLandingPage() {
           </ol>
         </section>
 
-        <section className="border-t border-border bg-muted/50">
-          <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8 sm:py-20">
-            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-              Built for teams who reply together
-            </h2>
-            <ul className="mt-10 grid gap-8 sm:grid-cols-3">
-              {OUTCOMES.map((item) => (
-                <li key={item.title}>
-                  <h3 className="text-base font-semibold tracking-tight text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {item.body}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <section className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8 sm:py-20">
+          <h2 className="marketing-inview text-2xl font-semibold tracking-tight text-foreground">
+            Built for teams who reply together
+          </h2>
+          <ul className="mt-10 grid gap-8 sm:grid-cols-3">
+            {OUTCOMES.map((item) => (
+              <li key={item.title} className="marketing-inview-item">
+                <h3 className="text-base font-semibold tracking-tight text-foreground">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {item.body}
+                </p>
+              </li>
+            ))}
+          </ul>
         </section>
 
-        <section className="mx-auto flex w-full max-w-6xl flex-col items-start gap-6 px-6 py-16 sm:px-8 sm:py-20">
+        <section className="marketing-inview mx-auto flex w-full max-w-6xl flex-col items-start gap-6 px-6 py-16 sm:px-8 sm:py-20">
           <h2 className="max-w-xl text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             Ready for one inbox?
           </h2>
@@ -212,7 +180,7 @@ export default function MarketingLandingPage() {
 
       <footer className="relative z-10 border-t border-border">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6 text-sm text-muted-foreground sm:px-8">
-          <p>Unified Inbox by Future Wave</p>
+          <p>Unified Inbox</p>
           <Link href="/login" className="hover:text-foreground">
             Sign in
           </Link>
